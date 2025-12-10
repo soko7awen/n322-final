@@ -26,6 +26,8 @@ export default function HubStack() {
   return (
     <Stack
       screenOptions={{
+        animation: "fade",
+        detachPreviousScreen: false,
         headerShown: true,
         headerStyle: { backgroundColor: palette.background, height: 48 },
         headerTintColor: palette.text,
