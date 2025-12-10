@@ -1,6 +1,6 @@
 # N322 Final — Productivity App
 
-Live build: [Vercel](https://n322-final.vercel.app)
+Live build: [Vercel](https://n322-final-project.vercel.app)
 
 ## Overview
 
