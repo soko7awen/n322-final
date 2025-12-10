@@ -1,8 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
-import { Text, View } from "react-native";
+import { Text, View, useWindowDimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { collection, getDocs, query, where, orderBy, limit } from "firebase/firestore";
 import PrimaryButton from "../../components/PrimaryButton";
+import ThemeToggleButton from "../../components/ThemeToggleButton";
 import { useAuth } from "../../src/auth/AuthContext";
 import { db } from "../../src/firebase/firebaseConfig";
 import { usePalette, useTheme } from "../../styles/theme";
@@ -13,6 +14,7 @@ export default function DashboardScreen() {
   const palette = usePalette();
   const router = useRouter();
   const { user, loading } = useAuth();
+  const { width } = useWindowDimensions();
   const [counts, setCounts] = useState({ notes: 0, tasks: 0, moods: 0 });
   const [loadingTiles, setLoadingTiles] = useState(true);
 
@@ -88,17 +90,21 @@ export default function DashboardScreen() {
     [counts]
   );
 
-  const renderTile = (tile) => (
-    <TapScale key={tile.id} onPress={() => router.push(tile.route)}>
+  const renderTile = (tile, stretch = false) => (
+    <TapScale
+      key={tile.id}
+      onPress={() => router.push(tile.route)}
+      style={stretch ? { flex: 1 } : null}
+    >
       <View
         style={{
-          flex: 1,
           backgroundColor: palette.card,
           borderRadius: 16,
           padding: 16,
           gap: 12,
           borderWidth: 1,
           borderColor: palette.border,
+          minHeight: 140,
         }}
       >
         <Text style={{ color: palette.muted, fontSize: 13, fontWeight: "700" }}>
@@ -112,8 +118,15 @@ export default function DashboardScreen() {
     </TapScale>
   );
 
+  const isCompact = width < 420;
+
   return (
     <View style={theme.screen}>
+      <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+        <Text style={theme.heading}>Dashboard</Text>
+        <ThemeToggleButton />
+      </View>
+
       <View style={theme.card}>
         <Text style={theme.heading}>Hey, {name} 👋</Text>
         <Text style={theme.subheading}>
@@ -122,12 +135,12 @@ export default function DashboardScreen() {
         <PrimaryButton title="Open Hub" onPress={() => router.push("/hub")} />
       </View>
 
-      <View style={{ flexDirection: "row", gap: 12 }}>
-        {renderTile(tiles[0])}
-        {renderTile(tiles[1])}
-      </View>
-      <View style={{ flexDirection: "row", gap: 12 }}>
-        {renderTile(tiles[2])}
+      <View style={{ flexDirection: "row", gap: 12, flexWrap: isCompact ? "wrap" : "nowrap" }}>
+        {tiles.map((tile, idx) => (
+          <View key={tile.id} style={{ flex: isCompact ? undefined : 1, minWidth: isCompact ? "100%" : undefined }}>
+            {renderTile(tile, !isCompact)}
+          </View>
+        ))}
       </View>
     </View>
   );

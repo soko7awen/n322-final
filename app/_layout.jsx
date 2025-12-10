@@ -56,8 +56,6 @@ function AppStack() {
             <ThemeToggleButton style={{ paddingRight: 8, marginRight: 12 }} />
           ),
           statusBarStyle: isDark ? "light" : "dark",
-          statusBarBackgroundColor: palette.background,
-          navigationBarColor: palette.background,
         }}
       >
         <Stack.Screen name="(tabs)" options={{ headerShown: false, animation: "fade" }} />

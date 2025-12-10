@@ -36,6 +36,8 @@ export default function TabsLayout() {
         name="index"
         options={{
           title: "Dashboard",
+          headerShown: true,
+          headerTitleAlign: "left",
           tabBarIcon: ({ color, size }) => (
             <Ionicons name="home" color={color} size={size} />
           ),
