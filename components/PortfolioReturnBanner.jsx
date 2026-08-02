@@ -12,6 +12,15 @@ export default function PortfolioReturnBanner() {
     const search = (window.location.search || "").toLowerCase();
     const href = (window.location.href || "").toLowerCase();
 
+    const isDismissed =
+      urlParams.get("dismiss_portfolio_banner") === "1" ||
+      sessionStorage.getItem("from_portfolio_dismissed") === "true";
+
+    if (isDismissed) {
+      setShow(false);
+      return;
+    }
+
     const fromParam =
       urlParams.get("from") === "portfolio" ||
       urlParams.get("ref") === "portfolio" ||
@@ -38,22 +47,11 @@ export default function PortfolioReturnBanner() {
 
     if (fromReferrer || (fromParam && !isInternalReferrer)) {
       sessionStorage.setItem("from_portfolio", "true");
-      sessionStorage.removeItem("from_portfolio_dismissed");
       if (fromReferrer) {
         sessionStorage.setItem("portfolio_url", document.referrer);
       }
     } else if (!isInternalReferrer && !fromParam) {
       sessionStorage.removeItem("from_portfolio");
-      sessionStorage.removeItem("from_portfolio_dismissed");
-    }
-
-    const isDismissed =
-      urlParams.get("dismiss_portfolio_banner") === "1" ||
-      sessionStorage.getItem("from_portfolio_dismissed") === "true";
-
-    if (isDismissed) {
-      setShow(false);
-      return;
     }
 
     const isFromPortfolio = sessionStorage.getItem("from_portfolio") === "true";
